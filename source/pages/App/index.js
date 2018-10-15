@@ -1,12 +1,13 @@
 // Core
 import React, { Component } from 'react';
 import { hot } from 'react-hot-loader';
+import Scheduler from 'components/Scheduler';
 
 @hot(module)
 export default class App extends Component {
     render () {
         return (
-            <h1
+            /*<h1
                 style = { {
                     display:         'flex',
                     justifyContent:  'center',
@@ -18,8 +19,9 @@ export default class App extends Component {
                     fontWeight:      '600',
                     textAlign:       'center',
                 } }>
-                Персональный проект: стартовая точка
-            </h1>
+                Планировщик задач
+            </h1>*/
+            <Scheduler />
         );
     }
 }
