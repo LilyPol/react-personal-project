@@ -15,6 +15,8 @@ export default class Task extends PureComponent {
         newMessage:    this.props.message,
     }
 
+    refTask = React.createRef();
+
     _getTaskShape = ({
         id = this.props.id,
         completed = this.props.completed,
@@ -26,21 +28,18 @@ export default class Task extends PureComponent {
         favorite,
         message,
     });
-
-    refTask = React.createRef();
-
-
+    
     _setTaskEditingState = (isTaskEditing = true) => {
         this.refTask.current.disabled = !isTaskEditing;
 
         if (isTaskEditing) {
             this.refTask.current.focus();
-        }
+        };
 
         this.setState({
             isTaskEditing,
         });
-    }
+    };
 
     _updateTask = () => {
         const { _updateTaskAsync, message } = this.props;
@@ -52,17 +51,35 @@ export default class Task extends PureComponent {
                     message: newMessage,
                 })
             );
-        }
+        };
         this._setTaskEditingState(false);
 
         return null;
-    }
+    };
 
     _updateNewTaskMessage = (e) => {
         this.setState({
             newMessage: e.target.value,
         });
-    }
+    };
+
+    _updateTaskMessageOnKeyDown = (e) => {
+        const { newMessage } = this.state;
+        const enterKey = e.key == "Enter";
+        const escapeKey = e.key == "Escape";
+
+        if (!newMessage) {
+            return null;
+        };
+
+        if (enterKey) {
+            this._updateTask();
+        };
+
+        if (escapeKey) {
+            this._cancelUpdatingTaskMessage();
+        };
+    };
 
     _updateTaskMessageOnClick = () => {
         const { isTaskEditing } = this.state;
@@ -71,10 +88,10 @@ export default class Task extends PureComponent {
             this._updateTask();
 
             return null;
-        }
+        };
 
         this._setTaskEditingState(true);
-    }
+    };
 
     _cancelUpdatingTaskMessage = () => {
         const { message: newMessage } = this.props;
@@ -84,34 +101,12 @@ export default class Task extends PureComponent {
         this.setState({
             newMessage,
         });
-    }
+    };
 
-    _updateTaskMessageOnKeyDown = (e) => {
-        const { newMessage } = this.state;
-        const enterKey = e.key === "Enter";
-        const escapeKey = e.key === "Escape";
+    _removeTask = () => {
+        const { _removeTaskAsync, id } = this.props;
 
-        if (!newMessage) {
-            return null;
-        }
-
-        if (enterKey) {
-            this._updateTask();
-        }
-
-        if (escapeKey) {
-            this._cancelUpdatingTaskMessage();
-        }
-    }
-
-    _toggleTaskCompletedState = () => {
-        const { _updateTaskAsync, completed } = this.props;
-
-        _updateTaskAsync(
-            this._getTaskShape({
-                completed: !completed,
-            })
-        );
+        _removeTaskAsync(id);
     }
 
     _toggleTaskFavoriteState = () => {
@@ -124,12 +119,17 @@ export default class Task extends PureComponent {
         );
     }
 
-    _removeTask = () => {
-        const { _removeTaskAsync, id } = this.props;
+    _toggleTaskCompletedState = () => {
+        const { _updateTaskAsync, completed } = this.props;
 
-        _removeTaskAsync(id);
+        _updateTaskAsync(
+            this._getTaskShape({
+                completed: !completed,
+            })
+        );
     }
 
+    
     render () {
         const { completed, favorite } = this.props;
         const { newMessage, isTaskEditing } = this.state;

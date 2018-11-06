@@ -26,51 +26,6 @@ export default class Scheduler extends Component {
         this._fetchTasksAsync();
     };
 
-    _updateTasksFilter = (e) => {
-        const { value } = e.target;
-
-        this.setState({
-            tasksFilter: value.toLocaleLowerCase(),
-        });
-    };
-
-    _updateNewTaskMessage = (e) => {
-        const { value: newTaskMessage } = e.target;
-
-        this.setState({ newTaskMessage });
-    };
-
-    _getAllCompleted = () => {
-        const { tasks } = this.state;
-
-        for (const task of tasks) {
-            if (!task.completed) {
-                return false;
-            };
-        };
-
-        return true;
-    };
-
-    _setTasksFetchingState = (isTasksFetching) => {
-        this.setState({ isTasksFetching });
-    };
-
-    _fetchTasksAsync = async () => {
-        try {
-            this._setTasksFetchingState(true);
-            const tasks = await api.fetchTasks();
-
-            this.setState({ tasks: sortTasksByGroup(tasks) });
-        }
-        catch ({ message }) {
-            console.log(message);
-        } 
-        finally {
-            this._setTasksFetchingState(false);
-        };
-    };
-
     _createTaskAsync = async (e) => {
         e.preventDefault();
         
@@ -96,6 +51,20 @@ export default class Scheduler extends Component {
         };
 
         return null;
+    };
+
+    _updateTasksFilter = (e) => {
+        const { value } = e.target;
+
+        this.setState({
+            tasksFilter: value.toLocaleLowerCase(),
+        });
+    };
+
+    _updateNewTaskMessage = (e) => {
+        const { value: newTaskMessage } = e.target;
+
+        this.setState({ newTaskMessage });
     };
 
     _updateTaskAsync = async (taskProps) => {
@@ -133,7 +102,6 @@ export default class Scheduler extends Component {
                     (task) => task.id !== id
                 ),
             }));
-
 
         } 
         catch ({ message }) {
@@ -178,6 +146,37 @@ export default class Scheduler extends Component {
         } 
         else {
             return null;
+        };
+    };
+
+    _getAllCompleted = () => {
+        const { tasks } = this.state;
+
+        for (const task of tasks) {
+            if (!task.completed) {
+                return false;
+            };
+        };
+
+        return true;
+    };
+
+    _setTasksFetchingState = (isTasksFetching) => {
+        this.setState({ isTasksFetching });
+    };
+
+    _fetchTasksAsync = async () => {
+        try {
+            this._setTasksFetchingState(true);
+            const tasks = await api.fetchTasks();
+
+            this.setState({ tasks: sortTasksByGroup(tasks) });
+        }
+        catch ({ message }) {
+            console.log(message);
+        } 
+        finally {
+            this._setTasksFetchingState(false);
         };
     };
 

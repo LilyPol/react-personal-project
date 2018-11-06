@@ -1,28 +1,6 @@
-/* const url = 'https://lab.lectrum.io/react/api';
-export const api = {
-    url
-};
- */
-
 import { MAIN_URL, TOKEN } from './config';
 
-export const api = {
-    async fetchTasks () {
-        const response = await fetch(`${MAIN_URL}`, {
-            method:  'GET',
-            headers: {
-                Authorization: TOKEN,
-            },
-        });
-
-        if (response.status !== 200) {
-            throw new Error('Tasks were not loaded');
-        }
-
-        const { data: tasks } = await response.json();
-
-        return tasks;
-    },
+export const api = {    
 
     async createTask (message) {
         const response = await fetch(`${MAIN_URL}`, {
@@ -35,7 +13,7 @@ export const api = {
         });
 
         if (response.status !== 200) {
-            throw new Error('Task were not created');
+            throw new Error('Error in "createTask"');
         }
 
         const { data: task } = await response.json();
@@ -54,7 +32,7 @@ export const api = {
         });
 
         if (response.status !== 200) {
-            throw new Error('Task were not updated');
+            throw new Error('Error in "updateTask"');
         }
     },
 
@@ -67,8 +45,25 @@ export const api = {
         });
 
         if (response.status !== 204) {
-            throw new Error('Task were not removed');
+            throw new Error('Error in "removeTask"');
         }
+    },
+
+    async fetchTasks () {
+        const response = await fetch(`${MAIN_URL}`, {
+            method:  'GET',
+            headers: {
+                Authorization: TOKEN,
+            },
+        });
+
+        if (response.status !== 200) {
+            throw new Error('Error in "fetchTasks"');
+        }
+
+        const { data: tasks } = await response.json();
+
+        return tasks;
     },
     
     async completeAllTasks (tasksList) {
@@ -87,11 +82,11 @@ export const api = {
             (resolve) => {
                 resolve.forEach((response) => {
                     if (response.status !== 200) {
-                        throw new Error('Task were not updated');
+                        throw new Error('Error in "completeAllTasks"');
                     }
                 });
             },
-            (error) => `Tasks were not updated ${error.message}`
+            (error) => `Error in "completeAllTasks" ${error.message}`
         );
     },
 };
