@@ -15,7 +15,7 @@ export default class Task extends PureComponent {
         newMessage:    this.props.message,
     }
 
-    refTask = React.createRef();
+    taskInput = React.createRef();
 
     _getTaskShape = ({
         id = this.props.id,
@@ -30,10 +30,10 @@ export default class Task extends PureComponent {
     });
     
     _setTaskEditingState = (isTaskEditing = true) => {
-        this.refTask.current.disabled = !isTaskEditing;
+        this.taskInput.current.disabled = !isTaskEditing;
 
         if (isTaskEditing) {
-            this.refTask.current.focus();
+            this.taskInput.current.focus();
         };
 
         this.setState({
@@ -154,7 +154,7 @@ export default class Task extends PureComponent {
                     <input
                         disabled
                         maxLength = { 50 }
-                        ref = { this.refTask }
+                        ref = { this.taskInput }
                         type = 'text'
                         value = { newMessage }
                         onChange = { this._updateNewTaskMessage }
